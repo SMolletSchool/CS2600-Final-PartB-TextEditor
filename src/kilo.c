@@ -6,6 +6,11 @@
 
 struct termios orig_termios;
 
+void iskill(const char *s) {
+    perror(s);
+    exit(1);
+}
+
 void unrawMode() {
     tcsetattr(STDIN_FILENO,TCSAFLUSH, &orig_termios);
 }
@@ -35,6 +40,6 @@ int main() {
         else printf("%d ('%c')\r\n", c, c);
         if (c == 'q') break;
     }
-    
+
     return 0;
 }
