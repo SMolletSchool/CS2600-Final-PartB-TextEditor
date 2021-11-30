@@ -1,3 +1,5 @@
+//includes
+
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -5,8 +7,11 @@
 #include <unistd.h>
 #include <termios.h>
 
+//globals
 struct termios orig_termios;
 
+
+//terminal
 void iskill(const char *s) {
     perror(s);
     exit(1);
@@ -32,6 +37,7 @@ void rawMode() {
     
 }
 
+//init
 int main() {
     rawMode();
     while (1) {
