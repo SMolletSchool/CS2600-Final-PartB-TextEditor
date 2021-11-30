@@ -1,14 +1,21 @@
+#include <stdlib.h>
 #include <unistd.h>
 #include <termios.h>
 
+struct termios orig_termios;
+
+void unrawMode() {
+    tcsetattr(STDIN_FILENO,TCSAFLUSH, &orig_termios);
+}
+
 void rawMode() {
-    struct termios raw;
+    tcgetattr(STDIN_FILENO, &orig_termios);
+    atexit(unrawMode);
 
-    tcgetattr(STDIN_FILENO, &raw);
-
+    struct termios raw = orig_termios;
     raw.c_lflag &= ~(ECHO);
-
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+    
 }
 
 int main() {
