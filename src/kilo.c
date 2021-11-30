@@ -15,8 +15,9 @@ void rawMode() {
     atexit(unrawMode);
 
     struct termios raw = orig_termios;
-    raw.c_lflag &= ~(ICRNL | IXON);
+    raw.c_lflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     raw.c_lflag &= ~(OPOST);
+    raw.c_lflag &= ~(CS8);
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
     
