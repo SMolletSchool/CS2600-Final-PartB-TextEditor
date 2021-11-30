@@ -7,10 +7,10 @@ else
 endif
 
 
-all: buildShell
+all: kilo
 
-buildTextEditor:
-	$(CC) -o bin/textedit.out src/main.c
+kilo: src/kilo.c
+	$(CC) src/kilo.c -o bin/kilo.out -Wall -Wextra -pedantic -std=c99
 
 clean:
-	$(DELETE) *.o *.out
+	$(DELETE) kilo.out
