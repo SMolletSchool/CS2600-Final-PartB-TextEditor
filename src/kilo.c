@@ -11,8 +11,10 @@
 //defines
 #define CTRL(k) ((k) & 0x1f)
 
-//globals
+//data
 struct editorConf {
+    int screenrows;
+    int screencols;
     struct termios orig_termios;
 };
 
@@ -65,6 +67,8 @@ int getWindowSize(int *rows, int *cols) {
     }
 }
 
+//output
+
 void editorKeyProcess() {
     char c = editorKey();
 
@@ -92,8 +96,15 @@ void editorScreenRef() {
 }
 
 //init
+
+void initEditor() {
+    if (getWindowSize(&E.screenrows, &E.screencols) == -1) iskill("getWindowSize");
+}
+
 int main() {
     rawMode();
+    initEditor();
+
     while (1) {
         editorScreenRef();
         editorKeyProcess();
