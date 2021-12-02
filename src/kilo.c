@@ -83,7 +83,7 @@ void editorKeyProcess() {
 
 void editorRows() {
     int y;
-    for (y = 0; y < 24; y++) write(STDOUT_FILENO, "`\r\n", 3);
+    for (y = 0; y < E.screenrows; y++) write(STDOUT_FILENO, "`\r\n", 3);
 }
 
 void editorScreenRef() {
