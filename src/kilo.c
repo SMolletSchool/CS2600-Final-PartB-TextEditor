@@ -9,7 +9,7 @@
 #include <termios.h>
 
 //defines
-#define CTRL(k) ((k) & 0x1f)
+#define CTRL_KEY(k) ((k) & 0x1f)
 
 //data
 struct editorConf {
@@ -56,13 +56,27 @@ char editorKey() {
     return c;
 }
 
+int getCursorPos(int *rows, int *cols) {
+    if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) return -1;
+
+    printf("\r\n");
+    char c;
+    while (read(STDIN_FILENO,&c,1) == 1) {
+        if (iscntrl(c)) printf("%d\r\n", c);
+        else printf("%d ('%c')\r\n", c, c);
+    }
+
+    editorKey();
+
+    return -1;
+}
+
 int getWindowSize(int *rows, int *cols) {
     struct winsize ws;
 
     if(1 || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
         if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
-        editorKey();
-        return -1;
+        return getCursorPos(rows,cols);
     }
     else {
         *cols = ws.ws_col;
@@ -77,7 +91,7 @@ void editorKeyProcess() {
     char c = editorKey();
 
     switch (c) {
-        case CTRL('q'):
+        case CTRL_KEY('q'):
             write(STDOUT_FILENO, "\x1b[2]", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
