@@ -57,10 +57,16 @@ void editorKeyProcess() {
     }
 }
 
+void editorScreenRef() {
+    write(STDOUT_FILENO, "\x1b[2]", 4);
+}
+
 //init
 int main() {
     rawMode();
-    while (1) editorKeyProcess();
-
+    while (1) {
+        editorScreenRef();
+        editorKeyProcess();
+    }
     return 0;
 }
