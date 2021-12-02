@@ -11,7 +11,12 @@
 #define CTRL(k) ((k) & 0x1f)
 
 //globals
-struct termios orig_termios;
+struct editorConf {
+    struct termios orig_termios;
+};
+
+struct editorConf E;
+
 
 
 //terminal
@@ -24,14 +29,14 @@ void iskill(const char *s) {
 }
 
 void unrawMode() {
-    if (tcsetattr(STDIN_FILENO,TCSAFLUSH, &orig_termios) == -1) iskill("tcsetattr");
+    if (tcsetattr(STDIN_FILENO,TCSAFLUSH, &E.orig_termios) == -1) iskill("tcsetattr");
 }
 
 void rawMode() {
-    if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) iskill("tcgetattr");
+    if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) iskill("tcgetattr");
     atexit(unrawMode);
 
-    struct termios raw = orig_termios;
+    struct termios raw = E.orig_termios;
     raw.c_lflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     raw.c_lflag &= ~(OPOST);
     raw.c_lflag &= ~(CS8);
