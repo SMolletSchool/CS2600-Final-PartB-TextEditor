@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include <termios.h>
 
+//defines
+#define CTRL(k) ((k) & 0x1f)
+
 //globals
 struct termios orig_termios;
 
@@ -45,7 +48,7 @@ int main() {
         if(read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) iskill("read");
         if (iscntrl(c)) printf("%d\r\n", c);
         else printf("%d ('%c')\r\n", c, c);
-        if (c == 'q') break;
+        if (c == CTRL('q')) break;
     }
 
     return 0;
