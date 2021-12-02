@@ -57,9 +57,19 @@ char editorKey() {
 }
 
 int getCursorPos(int *rows, int *cols) {
+    char buf[32];
+    unsigned int i = 0;
+
     if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) return -1;
 
-    printf("\r\n");
+    while (i < sizeof(buf) - 1) {
+        if (read(STDIN_FILENO, &buf[i], 1) != 1) break;
+        if (buf[i] == 'R') break;
+        i++;
+    }
+    buf[i] = '\0';
+
+    printf("\r\n&buf[i]: '%s'\r\n", &buf[i]);
     char c;
     while (read(STDIN_FILENO,&c,1) == 1) {
         if (iscntrl(c)) printf("%d\r\n", c);
