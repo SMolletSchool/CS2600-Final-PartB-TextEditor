@@ -16,6 +16,9 @@ struct termios orig_termios;
 
 //terminal
 void iskill(const char *s) {
+    write(STDOUT_FILENO, "\x1b[2]", 4);
+    write(STDOUT_FILENO, "\x1b[H", 3);
+
     perror(s);
     exit(1);
 }
@@ -52,6 +55,8 @@ void editorKeyProcess() {
 
     switch (c) {
         case CTRL('q'):
+            write(STDOUT_FILENO, "\x1b[2]", 4);
+            write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
             break;
     }
