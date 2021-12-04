@@ -115,6 +115,24 @@ void abFree(struct abuf *ab) {
 }
 
 //output
+//input
+
+void editorCursorMove(char key) {
+    switch (key) {
+        case 'a':
+            E.cx--;
+            break;
+        case 'd':
+            E.cx++;
+            break;
+        case 'w':
+            E.cy--;
+            break;
+        case 's':
+            E.cy++;
+            break;
+    }
+}
 
 void editorKeyProcess() {
     char c = editorKey();
@@ -124,6 +142,12 @@ void editorKeyProcess() {
             write(STDOUT_FILENO, "\x1b[2]", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
+            break;
+        case 'w':
+        case 'a':
+        case 's':
+        case 'd':
+            editorCursorMove(c);
             break;
     }
 }
@@ -182,7 +206,6 @@ void initEditor() {
 int main() {
     rawMode();
     initEditor();
-
     while (1) {
         editorScreenRef();
         editorKeyProcess();
