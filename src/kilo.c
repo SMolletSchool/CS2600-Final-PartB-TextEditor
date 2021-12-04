@@ -13,6 +13,13 @@
 #define KILO_VERSION "0.0.1"
 #define CTRL_KEY(k) ((k) & 0x1f)
 
+enum editorKey {
+    ARROW_LEFT = 'a',
+    ARROW_RIGHT = 'd',
+    ARROW_UP = 'w',
+    ARROW_DOWN = 's'
+};
+
 //data
 struct editorConf {
     int cx, cy;
@@ -52,7 +59,7 @@ void rawMode() {
     
 }
 
-char editorKey() {
+char editorReadKey() {
     int nread;
     char c;
     while ((nread = read(STDIN_FILENO, &c, 1)) != 1) if (nread == -1 && errno != EAGAIN) iskill("read");
@@ -65,10 +72,10 @@ char editorKey() {
 
         if (seq[0] == '[') {
             switch (seq[1]) {
-                case 'A': return 'w';
-                case 'B': return 's';
-                case 'C': return 'd';
-                case 'D': return 'a';
+                case 'A': return ARROW_UP;
+                case 'B': return ARROW_DOWN;
+                case 'C': return ARROW_RIGHT;
+                case 'D': return ARROW_LEFT;
             }
         }
 
@@ -78,7 +85,7 @@ char editorKey() {
     }
 }
 
-int getCursorPos(int *rows, int *cols) {
+int getCursorPosition(int *rows, int *cols) {
     char buf[32];
     unsigned int i = 0;
 
@@ -102,7 +109,7 @@ int getWindowSize(int *rows, int *cols) {
 
     if(ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
         if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
-        return getCursorPos(rows,cols);
+        return getCursorPosition(rows,cols);
     }
     else {
         *cols = ws.ws_col;
@@ -136,25 +143,25 @@ void abFree(struct abuf *ab) {
 //output
 //input
 
-void editorCursorMove(char key) {
+void editorMoveCursor(char key) {
     switch (key) {
-        case 'a':
+        case ARROW_LEFT:
             E.cx--;
             break;
-        case 'd':
+        case ARROW_RIGHT:
             E.cx++;
             break;
-        case 'w':
+        case ARROW_UP:
             E.cy--;
             break;
-        case 's':
+        case ARROW_DOWN:
             E.cy++;
             break;
     }
 }
 
-void editorKeyProcess() {
-    char c = editorKey();
+void editorProcessKeypress() {
+    char c = editorReadKey();
 
     switch (c) {
         case CTRL_KEY('q'):
@@ -162,11 +169,11 @@ void editorKeyProcess() {
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
             break;
-        case 'w':
-        case 'a':
-        case 's':
-        case 'd':
-            editorCursorMove(c);
+        case ARROW_UP:
+        case ARROW_LEFT:
+        case ARROW_DOWN:
+        case ARROW_RIGHT:
+            editorMoveCursor(c);
             break;
     }
 }
@@ -227,7 +234,7 @@ int main() {
     initEditor();
     while (1) {
         editorScreenRef();
-        editorKeyProcess();
+        editorProcessKeypress();
     }
     return 0;
 }
