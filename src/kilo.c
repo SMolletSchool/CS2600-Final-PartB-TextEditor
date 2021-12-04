@@ -339,6 +339,7 @@ void editorDrawStatusBar(struct abuf *ab) {
         }   
     }
     abAppend(ab, "\x1b[m", 3);
+    abAppend(ab, "\r\n", 2);
 }
 
 void editorRefreshScreen() {
