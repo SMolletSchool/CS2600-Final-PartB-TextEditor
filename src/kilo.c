@@ -15,6 +15,7 @@
 
 //data
 struct editorConf {
+    int cx, cy;
     int screenrows;
     int screencols;
     struct termios orig_termios;
@@ -170,6 +171,8 @@ void editorScreenRef() {
 //init
 
 void initEditor() {
+    E.cx = 0;
+    E.cy = 0;
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) iskill("getWindowSize");
 }
 
