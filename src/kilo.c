@@ -55,6 +55,7 @@ struct editorConfig {
     int screencols;
     int numrows;
     erow *row;
+    int dirty;
     char *filename;
     char statusmsg[80];
     time_t statusmsg_time;
@@ -110,7 +111,7 @@ int editorReadKey() {
         if (seq[0] == '[') {
             if (seq[1] >= '0' && seq[1] <= '9') {
                 if (read(STDIN_FILENO, &seq[2], 1) != 1) return '\x1b';
-                if (seq[2] == "`") {
+                if (seq[2] == "~") {
                     switch (seq[1]) {
                         case '1':
                         case '7': return HOME_KEY;
@@ -366,13 +367,13 @@ void editorDrawRows(struct abuf *ab) {
                     if (welcomelen > E.screencols) welcomelen = E.screencols;
                     int padding = (E.screencols - welcomelen)/2;
                     if (padding) {
-                        abAppend(ab, "`", 1);
+                        abAppend(ab, "~", 1);
                         padding--;
                     }
                     while (padding--) abAppend(ab, " ", 1);
                     abAppend(ab, welcome, welcomelen);
                 } else {
-                    abAppend(ab, "`", 1);
+                    abAppend(ab, "~", 1);
                 }
         } else {
             int len = E.row[filerow].rsize - E.coloff;
@@ -556,6 +557,7 @@ void initEditor() {
     E.coloff = 0;
     E.numrows = 0;
     E.row = NULL;
+    E.dirty = 0;
     E.filename = NULL;
     E.statusmsg[0] = '\0';
     E.statusmsg_time = 0;
