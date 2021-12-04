@@ -49,7 +49,7 @@ void disableRawMode() {
 
 void enableRawMode() {
     if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) iskill("tcgetattr");
-    atexit(disableRawMode());
+    atexit(disableRawMode);
 
     struct termios raw = E.orig_termios;
     raw.c_lflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
@@ -197,6 +197,13 @@ void editorProcessKeypress() {
             write(STDOUT_FILENO, "\x1b[2]", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
+            break;
+
+        case HOME_KEY:
+            E.cx = 0;
+            break;
+        case END_KEY:
+            E.cx = E.screencols - 1;
             break;
 
         case PAGE_UP:
