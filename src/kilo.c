@@ -26,14 +26,22 @@ enum editorKey {
 };
 
 //data
-struct editorConf {
+
+typedef struct erow {
+    int size;
+    char *chars;
+} erow;
+
+struct editorConfig {
     int cx, cy;
     int screenrows;
     int screencols;
+    int numrows;
+    erow row;
     struct termios orig_termios;
 };
 
-struct editorConf E;
+struct editorConfig E;
 
 //terminal
 void iskill(const char *s) {
@@ -273,6 +281,7 @@ void editorScreenRef() {
 void initEditor() {
     E.cx = 0;
     E.cy = 0;
+    E.numrows = 0;
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) iskill("getWindowSize");
 }
 
