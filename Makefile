@@ -10,7 +10,7 @@ endif
 all: kilo
 
 kilo: src/kilo.c
-	$(CC) src/kilo.c -o bin/kilo.out -Wall -Wextra -pedantic -std=c99
+	$(CC) src/kilo.c -o bin/kilo -Wall -Wextra -pedantic -std=c99
 
 clean:
-	$(DELETE) bin/kilo.out
+	$(DELETE) bin/kilo
