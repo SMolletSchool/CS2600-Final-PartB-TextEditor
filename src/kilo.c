@@ -1,5 +1,9 @@
 //includes
 
+#define __DEFAULT_SOURCE
+#define __BSD_SOURCE
+#define __GNU_SOURCE
+
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
