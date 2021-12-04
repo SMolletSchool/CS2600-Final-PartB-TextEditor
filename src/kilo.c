@@ -558,7 +558,8 @@ void editorProcessKeypress() {
 
     switch (c) {
         case '\r':
-            break; //TODO
+            editorInsertNewLine();
+            break;
         
         case CTRL_KEY('q'):
             if (E.dirty && quit_times > 0) {
