@@ -93,6 +93,8 @@ struct editorSyntax HLDB[] = {
     },
 };
 
+#define HLDB_ENTRIES (sizeof(HLDB) / sizeof(HLDB[0]))
+
 //prototypes
 
 void editorSetStatusMessage(const char *fmt,...);
@@ -247,6 +249,26 @@ int editorSyntaxToColor(int hl) {
         case HL_NUMBER: return 31;
         case HL_MATCH: return 34;
         default: return 37;
+    }
+}
+
+void editorSelectSyntaxHighlight() {
+    E.syntax = NULL;
+    if (E.filename == NULL) return;
+
+    char *ext = strrchr(E.filename, '.');
+
+    for (unsigned int j = 0; j < HLDB_ENTRIES; j++) {
+        struct editorSyntax *s = &HLDB[j];
+        unsigned int i = 0;
+        while (s->filematch[i]) {
+            int is_ext = (s->filematch[i][0] == '.');
+            if ((is_ext && ext && !strcmp(ext, s->filematch[i])) || (!is_ext && strstr(E.filename, s->filematch[i]))) {
+                E.syntax = s;
+                return;
+            }
+            i++;
+        }
     }
 }
 
