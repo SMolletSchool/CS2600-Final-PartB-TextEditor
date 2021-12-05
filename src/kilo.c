@@ -80,6 +80,18 @@ struct editorConfig {
 
 struct editorConfig E;
 
+//filetypes
+
+char *C_HL_extensions[] = { ".c", ".h", ".cpp", NULL};
+
+struct editorSyntax HLDB[] = {
+    {
+        "c",
+        C_HL_extensions,
+        HL_HIGHLIGHT_NUMBERS
+    },
+};
+
 //prototypes
 
 void editorSetStatusMessage(const char *fmt,...);
